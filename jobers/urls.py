@@ -20,13 +20,12 @@ from . import views
 
 
 urlpatterns = [
-    path('admin/', admin.site.urls),
-    path("api/", include("api.urls")),
-    
-    
-    
-    re_path("login", views.login),
+        
+    re_path("", views.login),
     re_path("signup", views.signup),
     re_path("test_token", views.test_token),
+
+    path('admin/', admin.site.urls),
+    path("api/", include("api.urls")),
     
 ]
