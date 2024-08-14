@@ -4,12 +4,11 @@ from .views import (
     RegisterArtisanView,
     ActivateAccountView,
     LoginView,
-    Home_Description,
     ValidateOTPView,
 )
 
 urlpatterns = [
-    path("", Home_Description, name="Documentation"),
+    
     path(
         "register/client/",
         RegisterCustomerView.as_view(),
