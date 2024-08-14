@@ -50,34 +50,39 @@ class RegisterCustomerView(generics.CreateAPIView):
     def post(self, request, *args, **kwargs):
         serializer = self.get_serializer(data=request.data)
         serializer.is_valid(raise_exception=True)
-        user = serializer.save()
-
+        serializer.save()
+        
+        # user = serializer.save()
+        
         # Envoie de l'email d'activation
-        self.send_activation_email(user, request)
-        return Response(
-            {"message": "Un email de confirmation a été envoyé."},
-            status=status.HTTP_201_CREATED,
-        )
+        # self.send_activation_email(user, request)
+        
+        # return Response(
+        #     {"message": "Un email de confirmation a été envoyé."},
+        #     status=status.HTTP_201_CREATED,
+        # )
+        
+        return Response({"message": "Inscription réussie."}, status=status.HTTP_201_CREATED)
 
-    def send_activation_email(self, user, request):
-        token = default_token_generator.make_token(user)
-        uid = urlsafe_base64_encode(force_bytes(user.pk))
-        current_site = get_current_site(request)
-        domain = current_site.domain
-        relative_link = reverse("activate", kwargs={"uidb64": uid, "token": token})
-        activate_url = f"http://{domain}{relative_link}"
-        email_subject = "Activation de votre compte"
-        email_body = render_to_string(
-            "account_activation_email.html",
-            {"user": user, "activate_url": activate_url},
-        )
-        send_mail(
-            email_subject,
-            email_body,
-            "noreply@jobers.com",
-            [user.email],
-            fail_silently=False,
-        )
+    # def send_activation_email(self, user, request):
+    #     token = default_token_generator.make_token(user)
+    #     uid = urlsafe_base64_encode(force_bytes(user.pk))
+    #     current_site = get_current_site(request)
+    #     domain = current_site.domain
+    #     relative_link = reverse("activate", kwargs={"uidb64": uid, "token": token})
+    #     activate_url = f"http://{domain}{relative_link}"
+    #     email_subject = "Activation de votre compte"
+    #     email_body = render_to_string(
+    #         "account_activation_email.html",
+    #         {"user": user, "activate_url": activate_url},
+    #     )
+    #     send_mail(
+    #         email_subject,
+    #         email_body,
+    #         "noreply@jobers.com",
+    #         [user.email],
+    #         fail_silently=False,
+    #     )
 
 
 class RegisterArtisanView(RegisterCustomerView):
@@ -142,6 +147,10 @@ class ValidateOTPView(APIView):
             
             user.otp = None
             user.otp_created_at = None
+            
+            if not user.is_active:
+                user.is_active = True
+            
             user.save()
             
             jwt_token = RefreshToken.for_user(user)

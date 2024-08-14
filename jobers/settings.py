@@ -167,13 +167,21 @@ STATIC_ROOT = 'static/'
 DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
 
 
-# EMAIL_BACKEND = 'django.core.mail.backends.smtp.EmailBackend'
+EMAIL_BACKEND = 'django.core.mail.backends.smtp.EmailBackend'
 # EMAIL_HOST = 'localhost'   # 'smtp.gmail.com'
 # EMAIL_PORT = 1025  # 587
-# EMAIL_USE_TLS = False
+EMAIL_USE_TLS = True
 # EMAIL_HOST_USER = "fernandafanou@gmail.com"
 # EMAIL_HOST_PASSWORD = 'carisfeak@2024'
-# DEFAULT_FROM_EMAIL = 'Jobers App | Plateforme des artisans <noreply@jobers.com>'
+DEFAULT_FROM_EMAIL = 'Jobers App | Plateforme des artisans <noreply@jobers.com>'
 
-EMAIL_BACKEND = 'django.core.mail.backends.filebased.EmailBackend'
-EMAIL_FILE_PATH = 'tmp/app-emails'
+EMAIL_HOST = 'sandbox.smtp.mailtrap.io'
+EMAIL_HOST_USER = 'abf1da9d16ec76'
+EMAIL_HOST_PASSWORD = 'c9bf0e14ec5356'
+EMAIL_PORT = '2525'
+
+
+
+
+# EMAIL_BACKEND = 'django.core.mail.backends.filebased.EmailBackend'
+# EMAIL_FILE_PATH = 'tmp/app-emails'

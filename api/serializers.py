@@ -1,7 +1,7 @@
 from rest_framework import serializers
 from django.contrib.auth import get_user_model, authenticate
 
-from .services import generate_otp, send_otp
+from .services import generate_otp, send_otp, send_otp_vonage
 from .models import User, Artisan, Customer, Metier
 from django.utils import timezone
 
@@ -19,7 +19,7 @@ class UserRegisterSerializer(serializers.ModelSerializer):
     
     class Meta:
         model = User
-        fields = ['username', 'email', 'phone', 'password', 'password_confirm']
+        fields = ['username', 'phone', 'password', 'password_confirm']
         
     def validate(self, data):
         if data['password'] != data['password_confirm']:
@@ -33,7 +33,6 @@ class UserRegisterSerializer(serializers.ModelSerializer):
         validate_data.pop('password_confirm')
         user = User.objects.create_user(
             username = validate_data['username'],
-            email = validate_data['email'],
             phone = validate_data['phone']
         )
         user.set_password(validate_data['password'])
@@ -47,6 +46,10 @@ class UserRegisterSerializer(serializers.ModelSerializer):
         #     number = validate_data['phone'],
         #     otp = otp
         # )
+        send_otp_vonage(
+            number= validate_data['phone'],
+            otp= otp
+        )
         
         return user
 

@@ -27,7 +27,7 @@ class User(AbstractUser):
     is_active = models.BooleanField(
         default=False
     )  # Non actif jusqu'à la verification par email
-    otp = models.CharField(max_length=6, blank=True, null=True)
+    otp = models.CharField(max_length=7, blank=True, null=True)
     otp_created_at = models.DateTimeField(blank=True, null=True)
 
     def is_otp_expired(self):
