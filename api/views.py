@@ -5,12 +5,13 @@ from rest_framework.permissions import AllowAny
 from django.contrib.auth import get_user_model
 from rest_framework.response import Response
 
-from .services import generate_otp, send_otp
-from .models import User
+from .services import generate_otp, send_otp_whatsapp
+from .models import Metier, User
 from .serializers import (
     CustomerRegisterSerializer,
     ArtisanRegisterSerializer,
     LoginSerializer,
+    MetierSerializer,
 )
 from django.contrib.auth.tokens import default_token_generator
 from django.utils.http import urlsafe_base64_encode, urlsafe_base64_decode
@@ -29,6 +30,8 @@ User = get_user_model()
 
 @api_view(['GET'])
 def Home_Description(request):
+    """Tous les urls sont prefixés de "api/v1"
+    """
     api_urls = {
         "Page de documentation temporaire": "/",
         "Login" : "login/",
@@ -123,8 +126,7 @@ class LoginView(APIView):
                 user.otp_created_at = timezone.now()
                 user.save()
                 
-                print(str(user.phone), otp)
-                send_otp(str(user.phone), otp)
+                send_otp_whatsapp(str(user.phone), otp)
 
             return Response(
                 {
@@ -162,3 +164,12 @@ class ValidateOTPView(APIView):
         except User.DoesNotExist:
             return Response({"error": "Code OTP invalide"}, status=status.HTTP_400_BAD_REQUEST)
             
+
+
+
+
+
+
+class MetierListCreateView(generics.ListCreateAPIView):
+    serializer_class = MetierSerializer
+    queryset = Metier.objects.all()

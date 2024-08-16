@@ -1,4 +1,5 @@
 from datetime import timedelta
+from tabnanny import verbose
 from django.db import models
 from django.contrib.auth.models import AbstractUser
 from phonenumber_field.modelfields import PhoneNumberField
@@ -8,11 +9,11 @@ from django.utils import timezone
 
 
 class Metier(models.Model):
-    label_metier = models.CharField(max_length=100, verbose_name="Nom du métier")
+    label_metier = models.CharField(max_length=100, verbose_name="Nom du métier", unique=True, null=False)
     description_metier = models.TextField(verbose_name="Description du métier")
 
-    created_at = models.DateTimeField(auto_now_add=True)
-    updated_at = models.DateTimeField(auto_now=True)
+    created_at = models.DateTimeField(auto_now_add=True, verbose_name="Date de création")
+    updated_at = models.DateTimeField(auto_now=True, verbose_name="Date de Modification")
 
     def __str__(self) -> str:
         return self.label_metier
@@ -40,7 +41,10 @@ class User(AbstractUser):
 
 class Customer(models.Model):
     user = models.OneToOneField(User, on_delete=models.CASCADE, primary_key=True)
-
+    
+    def __str__(self) -> str:
+        return str(self.user)
+    
 
 class Artisan(models.Model):
     user = models.OneToOneField(User, on_delete=models.CASCADE, primary_key=True)
@@ -49,3 +53,6 @@ class Artisan(models.Model):
     )
     quartier = models.CharField(max_length=255, verbose_name="Quartier")
     metier = models.ForeignKey(Metier, on_delete=models.SET_NULL, null=True)
+    
+    def __str__(self) -> str:
+        return f"{self.workshop_name}, atelier de {self.user}"

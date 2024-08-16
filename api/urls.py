@@ -1,5 +1,6 @@
 from django.urls import path
 from .views import (
+    MetierListCreateView,
     RegisterCustomerView,
     RegisterArtisanView,
     ActivateAccountView,
@@ -22,4 +23,8 @@ urlpatterns = [
     path("activate/<uidb64>/<token>/", ActivateAccountView.as_view(), name="activate"),
     path("login/", LoginView.as_view(), name="login"),
     path("confirm-otp/", ValidateOTPView.as_view(), name="Confirm-OTP"),
+    
+    
+    
+    path("liste-metiers/", MetierListCreateView.as_view(), name='Liste des metiers'),
 ]
