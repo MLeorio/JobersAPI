@@ -92,6 +92,9 @@ class ArtisanRegisterSerializer(UserRegisterSerializer):
 class LoginSerializer(serializers.Serializer):
     phone = serializers.CharField()
     password = serializers.CharField(write_only=True)
+    
+    class Meta:
+        fields = ['phone', 'password']
 
     def validate(self, attrs):
         phone = attrs.get("phone")

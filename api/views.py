@@ -28,22 +28,6 @@ User = get_user_model()
 
 # Create your views here.
 
-@api_view(['GET'])
-def Home_Description(request):
-    """Tous les urls sont prefixés de "api/v1"
-    """
-    api_urls = {
-        "Page de documentation temporaire": "/",
-        "Login" : "login/",
-        "Confirmation du code OTP" : "confirm-otp/",
-        "Inscription Client": "register/client/",
-        "Inscription Artisan": "register/artisan/",
-    }
-
-    return Response(api_urls)
-
-
-
 
 
 class RegisterCustomerView(generics.CreateAPIView):
@@ -92,27 +76,27 @@ class RegisterArtisanView(RegisterCustomerView):
     serializer_class = ArtisanRegisterSerializer
 
 
-class ActivateAccountView(generics.GenericAPIView):
-    permission_classes = [AllowAny]
+# class ActivateAccountView(generics.GenericAPIView):
+#     permission_classes = [AllowAny]
 
-    def get(self, request, uidb64, token, *args, **kwargs):
-        try:
-            uid = force_str(urlsafe_base64_decode(uidb64))
-            user = User.objects.get(pk=uid)
-        except (TypeError, ValueError, OverflowError, User.DoesNotExist):
-            user = None
+#     def get(self, request, uidb64, token, *args, **kwargs):
+#         try:
+#             uid = force_str(urlsafe_base64_decode(uidb64))
+#             user = User.objects.get(pk=uid)
+#         except (TypeError, ValueError, OverflowError, User.DoesNotExist):
+#             user = None
 
-        if user is not None and default_token_generator.check_token(user, token):
-            user.is_active = True
-            user.save()
-            return Response(
-                {"message": "Compte activé avec succès."}, status=status.HTTP_200_OK
-            )
-        else:
-            return Response(
-                {"error": "Le lien d'activation est invalide."},
-                status=status.HTTP_400_BAD_REQUEST,
-            )
+#         if user is not None and default_token_generator.check_token(user, token):
+#             user.is_active = True
+#             user.save()
+#             return Response(
+#                 {"message": "Compte activé avec succès."}, status=status.HTTP_200_OK
+#             )
+#         else:
+#             return Response(
+#                 {"error": "Le lien d'activation est invalide."},
+#                 status=status.HTTP_400_BAD_REQUEST,
+#             )
 
 
 class LoginView(APIView):
