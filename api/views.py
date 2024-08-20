@@ -1,7 +1,7 @@
 from django.urls import reverse
 from rest_framework import generics, status
 from rest_framework.views import APIView
-from rest_framework.permissions import AllowAny
+from rest_framework.permissions import AllowAny, IsAuthenticated
 from django.contrib.auth import get_user_model
 from rest_framework.response import Response
 
@@ -14,14 +14,13 @@ from .serializers import (
     MetierSerializer,
 )
 from django.contrib.auth.tokens import default_token_generator
-from django.utils.http import urlsafe_base64_encode, urlsafe_base64_decode
-from django.utils.encoding import force_bytes, force_str
-from django.contrib.sites.shortcuts import get_current_site
-from django.template.loader import render_to_string
-from django.core.mail import send_mail
+# from django.utils.http import urlsafe_base64_encode, urlsafe_base64_decode
+# from django.utils.encoding import force_bytes, force_str
+# from django.contrib.sites.shortcuts import get_current_site
+# from django.template.loader import render_to_string
+# from django.core.mail import send_mail
 from django.utils import timezone
 from rest_framework_simplejwt.tokens import RefreshToken
-from rest_framework.decorators import api_view
 
 
 User = get_user_model()
@@ -110,7 +109,8 @@ class LoginView(APIView):
                 user.otp_created_at = timezone.now()
                 user.save()
                 
-                send_otp_whatsapp(str(user.phone), otp)
+            
+            send_otp_whatsapp(str(user.phone), str(user.otp))
 
             return Response(
                 {
@@ -143,15 +143,33 @@ class ValidateOTPView(APIView):
             return Response({
                 'message': "Connexion réussie",
                 'refresh': str(jwt_token),
-                'access': str(jwt_token.access_token),
+                'token': str(jwt_token.access_token),
             })
         except User.DoesNotExist:
             return Response({"error": "Code OTP invalide"}, status=status.HTTP_400_BAD_REQUEST)
             
 
 
+class LogoutView(APIView):
+    def post(self, request):
+        try:
+            refresh_token = request.data['refresh']
+            token = RefreshToken(refresh_token)
+            token.blacklist()
+            return Response(status=status.HTTP_205_RESET_CONTENT)
+        except Exception as e:
+            return Response(status=status.HTTP_400_BAD_REQUEST)
+            
 
-
+class CurrentUserView(APIView):
+    permission_classes = [IsAuthenticated]
+    
+    def get(self, request):
+        user = request.user
+        return Response({
+            "username": user.username,
+            "phone": str(user.phone),
+        })
 
 
 class MetierListCreateView(generics.ListCreateAPIView):

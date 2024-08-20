@@ -34,14 +34,14 @@ class MetierAdmin(admin.ModelAdmin):
     fieldsets = ((None, {"fields": ("label_metier", "description_metier")}),)
 
 
-class UserAdmin(BaseUserAdmin):
+class UserAdmin(admin.ModelAdmin):
     inlines = [ArtianUserInline, CustomerUserInline]
     list_display = ("username", "phone", "is_active", "date_joined")
     list_filter = ("is_active", "date_joined")
     search_fields = ("username", "phone", "email")
     ordering = ("date_joined",)
     fieldsets = (
-        (None, {"fields": ("username", "password")}),
+        (None, {"fields": ("username", "password", "otp", "otp_created_at")}),
         (
             ("Infos personnelles"),
             {"fields": ("phone", "email", "last_name", "first_name")},

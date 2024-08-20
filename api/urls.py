@@ -1,5 +1,7 @@
 from django.urls import path, re_path
 from .views import (
+    CurrentUserView,
+    LogoutView,
     MetierListCreateView,
     RegisterCustomerView,
     RegisterArtisanView,
@@ -21,4 +23,8 @@ urlpatterns = [
     path("login/", LoginView.as_view(), name="login"),
     path("confirm-otp/", ValidateOTPView.as_view(), name="Confirm-OTP"),
     path("liste-metiers/", MetierListCreateView.as_view(), name="Liste des metiers"),
+    
+    path("current-user/", CurrentUserView.as_view(), name="current-user"),
+    path("logout/", LogoutView.as_view(), name="logout"),
+    
 ]

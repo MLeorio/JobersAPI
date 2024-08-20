@@ -75,7 +75,7 @@ def send_otp_whatsapp(number:str, otp:str):
     )
     headers = {
         "Content-Type": "application/json",
-        "Authorization": "Bearer EAAXoMAF72uoBOwYJHwIKxbNCBpVaBpZBIrSHX5PpT9StTh5V0LjQo4SVpmHXJjv2zm8BDPXG1oIXUQjNUIZBFaZB46LElfGyRx5wn6kgXxxhgcUGDVla8uHxImJhU7C6sC140AQQMjjn43flosId0eKXXC0CdO1M9Eb867qQl3LLfRHdm1a194L1KVnGlMM4QZDZD",
+        "Authorization": "Token a recuperer depuis .env", # installer dotenv pour gerer la confidentialite des cles...
     }
     
     response = requests.request("POST", url, headers=headers, data=payload)

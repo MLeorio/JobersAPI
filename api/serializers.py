@@ -45,8 +45,6 @@ class UserRegisterSerializer(serializers.ModelSerializer):
 
         user.save()
 
-        print(validate_data["mode"])
-
         if validate_data["mode"] == "sms":
             send_otp_vonage(number=validate_data["phone"], otp=otp)
         elif validate_data["mode"] == 'whatsapp':
@@ -104,8 +102,11 @@ class LoginSerializer(serializers.Serializer):
             user = authenticate(
                 request=self.context.get("request"), username=phone, password=password
             )
-            if not user:
+            if not user :
                 raise serializers.ValidationError("Les identifiants sont incorrects.")
+            elif not user.is_active :
+                raise serializers.ValidationError("Ce compte utilisateur n'est pas actif.")
+                
         else:
             raise serializers.ValidationError(
                 "Le numéro de téléphone et le mot de passe sont requis."
