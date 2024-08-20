@@ -1,12 +1,15 @@
-from django.urls import reverse
+# from django.urls import reverse
 from rest_framework import generics, status
 from rest_framework.views import APIView
 from rest_framework.permissions import AllowAny, IsAuthenticated
 from django.contrib.auth import get_user_model
 from rest_framework.response import Response
 
+from rest_framework import viewsets
+from yaml import serialize
+
 from .services import generate_otp, send_otp_whatsapp
-from .models import Metier, User
+from .models import Customer, Metier, User
 from .serializers import (
     CustomerRegisterSerializer,
     ArtisanRegisterSerializer,
@@ -26,6 +29,11 @@ from rest_framework_simplejwt.tokens import RefreshToken
 User = get_user_model()
 
 # Create your views here.
+
+# class CustomerViewSet(viewsets.ModelViewSet):
+#     queryset = Customer.objects.all()
+#     serializer_class = CustomerRegisterSerializer
+
 
 
 
