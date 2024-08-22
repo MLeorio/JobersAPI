@@ -56,7 +56,7 @@ class RegisterCustomerView(generics.CreateAPIView):
         #     status=status.HTTP_201_CREATED,
         # )
         
-        return Response({"message": "Inscription réussie."}, status=status.HTTP_201_CREATED)
+        return Response({"message": "Inscription réussie. Un code OTP vous sera envoyer pour validation "}, status=status.HTTP_201_CREATED)
 
     # def send_activation_email(self, user, request):
     #     token = default_token_generator.make_token(user)
@@ -117,7 +117,6 @@ class LoginView(APIView):
                 user.otp_created_at = timezone.now()
                 user.save()
                 
-            
             send_otp_whatsapp(str(user.phone), str(user.otp))
 
             return Response(
@@ -149,8 +148,8 @@ class ValidateOTPView(APIView):
             
             jwt_token = RefreshToken.for_user(user)
             return Response({
-                'message': "Connexion réussie",
-                'refresh': str(jwt_token),
+                'message': "Code validé avec succès",
+                # 'refresh': str(jwt_token),
                 'token': str(jwt_token.access_token),
             })
         except User.DoesNotExist:
@@ -174,6 +173,8 @@ class CurrentUserView(APIView):
     
     def get(self, request):
         user = request.user
+        userObj = User.objects.filter(pk=user.id)
+        # print(userObj)
         return Response({
             "username": user.username,
             "phone": str(user.phone),

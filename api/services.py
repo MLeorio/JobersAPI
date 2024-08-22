@@ -3,6 +3,11 @@ import random
 
 import vonage
 
+from dotenv import load_dotenv
+import os
+
+load_dotenv()
+
 
 def generate_otp():
     code = str(random.randint(100000, 999999))
@@ -24,7 +29,7 @@ def generate_otp():
 
 
 def send_otp_vonage(number, otp):
-    client = vonage.Client(key="31903487", secret="ydxXmwW2cMjXGWRk")
+    client = vonage.Client(key=os.environ.get('VONAGE_API_KEY') , secret=os.environ.get('VONAGE_API_SECRET'))
     sms = vonage.Sms(client)
 
     responseData = sms.send_message(
@@ -75,7 +80,7 @@ def send_otp_whatsapp(number:str, otp:str):
     )
     headers = {
         "Content-Type": "application/json",
-        "Authorization": "Token a recuperer depuis .env", # installer dotenv pour gerer la confidentialite des cles...
+        "Authorization": os.environ.get('WHATSAPP_TOKEN'), # installer dotenv pour gerer la confidentialite des cles...
     }
     
     response = requests.request("POST", url, headers=headers, data=payload)

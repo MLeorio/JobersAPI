@@ -13,15 +13,19 @@ https://docs.djangoproject.com/en/5.1/ref/settings/
 from datetime import timedelta
 from pathlib import Path
 
+import os
+from dotenv import load_dotenv
+
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
 BASE_DIR = Path(__file__).resolve().parent.parent
 
+load_dotenv()
 
 # Quick-start development settings - unsuitable for production
 # See https://docs.djangoproject.com/en/5.1/howto/deployment/checklist/
 
 # SECURITY WARNING: keep the secret key used in production secret!
-SECRET_KEY = "django-insecure-c5+z24-9s+b9*&e8&ycprus**0kw^s0($%s4w=l3%z%7_3q@i*"
+SECRET_KEY = os.environ.get('SECRET_KEY')
 
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = True
@@ -70,19 +74,19 @@ SIMPLE_JWT = {
     "TOKEN_BLACKLIST_ENABLED": True
 }
 
-PHONE_VERIFICATION = {
-    "BACKEND": "phone_verify.backends.twilio.TwilioBackend",
-    "OPTIONS": {
-        "SID": "TWILIO_ACCOUNT_SID",
-        "SECRET": "TWILIO_AUTH_TOKEN",
-        "FROM": "+22891657590",  # le numero a payer sur Twilio
-        "SANDBOX_TOKEN": "123456",  # TOken utilise en mode sandbox
-    },
-    "MESSAGE": "Votre code de verification est {code}",
-    "APP_NAME": "MyApp",
-    "TOKEN_LENGTH": 6,
-    "USE_SANDBOX": True,  # A utiliser seulement en mode dev...
-}
+# PHONE_VERIFICATION = {
+#     "BACKEND": "phone_verify.backends.twilio.TwilioBackend",
+#     "OPTIONS": {
+#         "SID": "TWILIO_ACCOUNT_SID",
+#         "SECRET": "TWILIO_AUTH_TOKEN",
+#         "FROM": "+22891657590",  # le numero a payer sur Twilio
+#         "SANDBOX_TOKEN": "123456",  # TOken utilise en mode sandbox
+#     },
+#     "MESSAGE": "Votre code de verification est {code}",
+#     "APP_NAME": "MyApp",
+#     "TOKEN_LENGTH": 6,
+#     "USE_SANDBOX": True,  # A utiliser seulement en mode dev...
+# }
 
 SWAGGER_SETTINGS = {
     'VALIDATOR_URL': 'http://localhost:8189',
@@ -128,6 +132,17 @@ DATABASES = {
         "NAME": BASE_DIR / "db.sqlite3",
     }
 }
+
+# DATABASES = {
+#     'default': {
+#         'ENGINE': 'django.db.backends.mysql',
+#         'NAME': 'your_mysql_database_name',
+#         'USER': 'your_mysql_user',
+#         'PASSWORD': 'your_mysql_password',
+#         'HOST': 'localhost',  # or the hostname where your MySQL server is running
+#         'PORT': '3306',      # or the port on which your MySQL server is listening
+#     }
+# }
 
 
 # Password validation
@@ -179,13 +194,8 @@ EMAIL_BACKEND = "django.core.mail.backends.smtp.EmailBackend"
 EMAIL_USE_TLS = True
 # EMAIL_HOST_USER = "fernandafanou@gmail.com"
 # EMAIL_HOST_PASSWORD = 'carisfeak@2024'
-DEFAULT_FROM_EMAIL = "Jobers App | Plateforme des artisans <noreply@jobers.com>"
 
 EMAIL_HOST = "sandbox.smtp.mailtrap.io"
-EMAIL_HOST_USER = "abf1da9d16ec76"
-EMAIL_HOST_PASSWORD = "c9bf0e14ec5356"
+EMAIL_HOST_USER = os.environ.get('EMAIL_HOST_USER')
+EMAIL_HOST_PASSWORD = os.environ.get('EMAIL_HOST_PASSWORD')
 EMAIL_PORT = "2525"
-
-
-# EMAIL_BACKEND = 'django.core.mail.backends.filebased.EmailBackend'
-# EMAIL_FILE_PATH = 'tmp/app-emails'
